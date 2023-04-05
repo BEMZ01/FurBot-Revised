@@ -53,18 +53,29 @@ class DevCmds(commands.Cog):
     @dev.command(name="announce", description="Announce something")
     async def announce(self, ctx: discord.ApplicationContext, *, message: str):
         await ctx.defer()
-        embed = discord.Embed(title="Announcement", description=message, color=0x00ff00)
+        embed = discord.Embed(title="Announcement", description=message)
+        info_message = await ctx.respond("Announcing... (0%)", embed=embed)
         # send the announcement to the first channel we can access
-        for guild in self.bot.guilds:
+        for i, guild in enumerate(self.bot.guilds):
             for channel in guild.channels:
                 if channel.permissions_for(guild.me).send_messages and type(channel) == discord.TextChannel:
                     try:
                         await channel.send(embed=embed)
                     except Exception as e:
-                        await asyncio.sleep(15)
-                        pass
-                    break
-            print(f"Announced to {guild.name} ({round((self.bot.guilds.index(guild) + 1) / len(self.bot.guilds) * 100, 2)}%)")
+                        print(f"Failed to send announcement to {channel.name} in {guild.name}:\n{e} (1/2)")
+                        await asyncio.sleep(60)
+                        # try again
+                        try:
+                            await channel.send(embed=embed)
+                        except Exception as e:
+                            print(f"Failed to send announcement to {channel.name} in {guild.name}:\n{e} (2/2)")
+                        finally:
+                            break
+                    finally:
+                        break
+            print(f"Announcing... ({round((i + 1) / len(self.bot.guilds) * 100)}%)")
+            if i % 10 == 0:
+                await info_message.edit(content=f"Announcing... ({round((i + 1) / len(self.bot.guilds) * 100)}%)")
 
 
 def setup(bot):

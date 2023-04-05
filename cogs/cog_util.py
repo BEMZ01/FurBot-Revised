@@ -18,14 +18,14 @@ class utilCmds(commands.Cog):
     async def update_display(self):
         await self.bot.wait_until_ready()
         if self.display_rotation == 0:
-            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{len(self.bot.guilds)} servers."))
+            await self.bot.change_presence(
+                activity=discord.Activity(type=discord.ActivityType.watching, name=f"{len(self.bot.guilds)} servers."))
         elif self.display_rotation == 1:
-            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"Hello {random.choice(self.bot.guilds).name}!"))
+            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
+                                                                     name=f"Hello {random.choice(self.bot.guilds).name}!"))
         elif self.display_rotation == 2:
             self.display_rotation = -1
         self.display_rotation += 1
-
-
 
     @commands.slash_command(name="ping", description="Check the bot's latency")
     async def ping(self, ctx: discord.ApplicationContext):
@@ -56,6 +56,15 @@ class utilCmds(commands.Cog):
         view.add_item(discord.ui.Button(label="Github", url="https://github.com/BEMZ01/FurBot-Revised", emoji="📦"))
         embed = discord.Embed(title="Links", description="Here are some links to various sites about the bot!")
         await ctx.respond(embed=embed, view=view, ephemeral=True, delete_after=60)
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author.bot:
+            return
+        if message.content.startswith("an:"):
+            await message.channel.send(f"The `an:` prefix is deprecated. Please use the newer discord slash "
+                                       f"commands instead. Type `/` to see a list of commands from supported bots.")
+
 
 def setup(bot):
     bot.add_cog(utilCmds(bot))

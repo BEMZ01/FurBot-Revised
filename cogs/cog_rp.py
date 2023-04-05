@@ -5,11 +5,20 @@ from e621 import E621
 from util.util import Generate_color
 
 
+async def build_embed(ctx: discord.ApplicationContext, post, title, description):
+    embed = discord.Embed(title=title, description=description,
+                          color=await Generate_color(post.preview.url),
+                          url=f"https://e621.net/posts/{str(post.id)}")
+    embed.set_image(url=post.file_obj.url)
+    embed.set_footer(text=f"Command ran by {str(ctx.author)} | FurBot", icon_url=f"{ctx.author.display_avatar.url}")
+    return embed
+
+
 class RolePlay_cmds(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.api = E621()
-        self.tag_blacklist = ["-webm", "-child", "rating:s", "animated", "-flash"]
+        self.tag_blacklist = ["-webm", "-child", "animated", "-flash"]
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -20,80 +29,82 @@ class RolePlay_cmds(commands.Cog):
 
     rp = discord.SlashCommandGroup(name="roleplay", description="Roleplay commands")
 
-    @rp.command(name="hug")
+    @rp.command(name="hug", description="Hug someone")
     async def hug(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        posts = self.api.posts.search(tags="hug " + " ".join(self.tag_blacklist), limit=100)
+        # if channel is not nsfw, only allow sfw posts
+        if ctx.channel.is_nsfw():
+            posts = self.api.posts.search(tags="hug " + " ".join(self.tag_blacklist), limit=100)
+        else:
+            posts = self.api.posts.search(tags="hug rating:safe " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
-        # create the embed
-        embed = discord.Embed(title="Hug", description=f"{ctx.author.mention} hugs {member.mention}",
-                              color=await Generate_color(post.preview.url),
-                              url=f"https://e621.net/posts/{str(post.id)}")
-        embed.set_image(url=post.file_obj.url)
-        embed.set_footer(text=f"Command ran by {str(ctx.author)} | FurBot", icon_url=f"{ctx.author.display_avatar.url}")
+        embed = await build_embed(ctx, post, "Hug", f"{ctx.author.mention} hugs {member.mention}")
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label="Source", url=f"https://e621.net/posts/{str(post.id)}"))
         view.add_item(discord.ui.Button(label="Vote", url=f"https://top.gg/bot/716259432878702633/vote"))
         await ctx.respond(embed=embed, view=view, delete_after=120)
 
-    @rp.command(name="kiss")
+    @rp.command(name="kiss", description="Kiss someone")
     async def kiss(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        posts = self.api.posts.search(tags="kissing " + " ".join(self.tag_blacklist), limit=100)
+        if ctx.channel.is_nsfw():
+            posts = self.api.posts.search(tags="kissing " + " ".join(self.tag_blacklist), limit=100)
+        else:
+            posts = self.api.posts.search(tags="kissing rating:safe " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
-        embed = discord.Embed(title="Kiss", description=f"{ctx.author.mention} <3 {member.mention}",
-                              color=await Generate_color(post.preview.url),
-                              url=f"https://e621.net/posts/{str(post.id)}")
-        embed.set_image(url=post.file_obj.url)
-        embed.set_footer(text=f"Command ran by {str(ctx.author)} | FurBot", icon_url=f"{ctx.author.display_avatar.url}")
+        embed = await build_embed(ctx, post, "Kiss", f"{ctx.author.mention} <3 {member.mention}")
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label="Source", url=f"https://e621.net/posts/{str(post.id)}"))
         view.add_item(discord.ui.Button(label="Vote", url=f"https://top.gg/bot/716259432878702633/vote"))
         await ctx.respond(embed=embed, view=view, delete_after=120)
 
-    @rp.command(name="boop")
+    @rp.command(name="boop", description="Boop someone")
     async def boop(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        posts = self.api.posts.search(tags="boop " + " ".join(self.tag_blacklist), limit=100)
+        if ctx.channel.is_nsfw():
+            posts = self.api.posts.search(tags="boop " + " ".join(self.tag_blacklist), limit=100)
+        else:
+            posts = self.api.posts.search(tags="boop rating:safe " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
-        embed = discord.Embed(title="Boop", description=f"{ctx.author.mention} boops {member.mention}",
-                              color=await Generate_color(post.preview.url),
-                              url=f"https://e621.net/posts/{str(post.id)}")
-        embed.set_image(url=post.file_obj.url)
-        embed.set_footer(text=f"Command ran by {str(ctx.author)} | FurBot", icon_url=f"{ctx.author.display_avatar.url}")
+        embed = await build_embed(ctx, post, "Boop", f"{ctx.author.mention} boops {member.mention}")
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label="Source", url=f"https://e621.net/posts/{str(post.id)}"))
         view.add_item(discord.ui.Button(label="Vote", url=f"https://top.gg/bot/716259432878702633/vote"))
         await ctx.respond(embed=embed, view=view, delete_after=120)
 
-    @rp.command(name="lick")
+    @rp.command(name="lick", description="Lick someone")
     async def lick(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
         posts = self.api.posts.search(tags="licking " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
-        embed = discord.Embed(title="Lick", description=f"{ctx.author.mention} licks {member.mention}",
-                              color=await Generate_color(post.preview.url),
-                              url=f"https://e621.net/posts/{str(post.id)}")
-        embed.set_image(url=post.file_obj.url)
-        embed.set_footer(text=f"Command ran by {str(ctx.author)} | FurBot", icon_url=f"{ctx.author.display_avatar.url}")
+        embed = await build_embed(ctx, post, "Lick", f"{ctx.author.mention} licks {member.mention}")
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label="Source", url=f"https://e621.net/posts/{str(post.id)}"))
         view.add_item(discord.ui.Button(label="Vote", url=f"https://top.gg/bot/716259432878702633/vote"))
         await ctx.respond(embed=embed, view=view, delete_after=120)
 
-    @rp.command(name="pet")
+    @rp.command(name="pet", description="Pet someone")
     async def pet(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
         posts = self.api.posts.search(tags="petting " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
-        embed = discord.Embed(title="Pet", description=f"{ctx.author.mention} pets {member.mention}",
-                              color=await Generate_color(post.preview.url),
-                              url=f"https://e621.net/posts/{str(post.id)}")
-        embed.set_image(url=post.file_obj.url)
-        embed.set_footer(text=f"Command ran by {str(ctx.author)} | FurBot", icon_url=f"{ctx.author.display_avatar.url}")
+        embed = await build_embed(ctx, post, "Pet", f"{ctx.author.mention} pets {member.mention}")
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label="Source", url=f"https://e621.net/posts/{str(post.id)}"))
         view.add_item(discord.ui.Button(label="Vote", url=f"https://top.gg/bot/716259432878702633/vote"))
         await ctx.respond(embed=embed, view=view, delete_after=120)
+
+    @rp.command(name="slap", description="Slap someone")
+    async def slap(self, ctx: discord.ApplicationContext, member: discord.Member):
+        await ctx.defer()
+        posts = self.api.posts.search(tags="slap " + " ".join(self.tag_blacklist), limit=100)
+        post = random.choice(posts)
+        embed = await build_embed(ctx, post, "Slap", f"{ctx.author.mention} slaps {member.mention}")
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label="Source", url=f"https://e621.net/posts/{str(post.id)}"))
+        view.add_item(discord.ui.Button(label="Vote", url=f"https://top.gg/bot/716259432878702633/vote"))
+        await ctx.respond(embed=embed, view=view, delete_after=120)
+
+
 def setup(bot):
     bot.add_cog(RolePlay_cmds(bot))

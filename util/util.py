@@ -1,15 +1,15 @@
 # This python script will be imported into other python files and will provide some useful functions
 import io
-
 import aiohttp
 import discord
 from PIL import Image
 
 
-async def Generate_color(image_url):
+async def Generate_color(image_url: str):
     """Generate a similar color to the album cover of the song.
     :param image_url: The url of the album cover.
-    :return: The color of the album cover."""
+    :return discord.Color: A discord color.
+    """
 
     async with aiohttp.ClientSession() as session:
         async with session.get(image_url) as resp:
@@ -17,7 +17,7 @@ async def Generate_color(image_url):
                 return discord.Color.blurple()
             f = io.BytesIO(await resp.read())
     image = Image.open(f)
-    # Get adverage color of the image
+    # Get average color of the image
     colors = image.getcolors(image.size[0] * image.size[1])
     # Sort the colors by the amount of pixels and get the most common color
     colors.sort(key=lambda x: x[0], reverse=True)
