@@ -21,8 +21,8 @@ class utilCmds(commands.Cog):
             await self.bot.change_presence(
                 activity=discord.Activity(type=discord.ActivityType.watching, name=f"{len(self.bot.guilds)} servers."))
         elif self.display_rotation == 1:
-            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
-                                                                     name=f"Hello {random.choice(self.bot.guilds).name}!"))
+            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing,
+                                                                     name=f"with {random.choice(self.bot.guilds).name}!"))
         elif self.display_rotation == 2:
             self.display_rotation = -1
         self.display_rotation += 1
