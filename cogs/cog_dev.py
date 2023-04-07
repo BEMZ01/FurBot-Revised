@@ -1,8 +1,6 @@
 import asyncio
-from pprint import pprint
-
 import discord
-from util.util import Generate_color, check_nsfw
+from util.util import Generate_color, nsfw_check
 from discord.ext import commands
 
 

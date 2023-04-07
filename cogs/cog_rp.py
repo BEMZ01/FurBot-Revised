@@ -2,7 +2,7 @@ import random
 import discord
 from discord.ext import commands
 from e621 import E621
-from util.util import Generate_color
+from util.util import Generate_color, nsfw_check
 
 
 async def build_embed(ctx: discord.ApplicationContext, post, title, description):
@@ -75,7 +75,10 @@ class RolePlay_cmds(commands.Cog):
     @rp.command(name="lick", description="Lick someone")
     async def lick(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        posts = self.api.posts.search(tags="licking " + " ".join(self.tag_blacklist), limit=100)
+        if ctx.channel.is_nsfw():
+            posts = self.api.posts.search(tags="licking " + " ".join(self.tag_blacklist), limit=100)
+        else:
+            posts = self.api.posts.search(tags="licking rating:safe " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
         embed = await build_embed(ctx, post, "Lick", f"{ctx.author.mention} licks {member.mention}")
         view = discord.ui.View()
@@ -86,7 +89,10 @@ class RolePlay_cmds(commands.Cog):
     @rp.command(name="pet", description="Pet someone")
     async def pet(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        posts = self.api.posts.search(tags="petting " + " ".join(self.tag_blacklist), limit=100)
+        if ctx.channel.is_nsfw():
+            posts = self.api.posts.search(tags="petting " + " ".join(self.tag_blacklist), limit=100)
+        else:
+            posts = self.api.posts.search(tags="petting rating:safe " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
         embed = await build_embed(ctx, post, "Pet", f"{ctx.author.mention} pets {member.mention}")
         view = discord.ui.View()
@@ -97,7 +103,10 @@ class RolePlay_cmds(commands.Cog):
     @rp.command(name="slap", description="Slap someone")
     async def slap(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        posts = self.api.posts.search(tags="slap " + " ".join(self.tag_blacklist), limit=100)
+        if ctx.channel.is_nsfw():
+            posts = self.api.posts.search(tags="slap " + " ".join(self.tag_blacklist), limit=100)
+        else:
+            posts = self.api.posts.search(tags="slap rating:safe " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
         embed = await build_embed(ctx, post, "Slap", f"{ctx.author.mention} slaps {member.mention}")
         view = discord.ui.View()

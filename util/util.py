@@ -32,10 +32,10 @@ async def Generate_color(image_url: str):
     return discord.Color.from_rgb(color[0], color[1], color[2])
 
 
-def check_nsfw(ctx: discord.ApplicationContext):
-    # if channel is marked as nsfw or is inside a DM
-    if ctx.channel.is_nsfw() or isinstance(ctx.channel, discord.DMChannel):
-        return True
+def nsfw_check(tags, ctx):
+    if not ctx.channel.is_nsfw():
+        tags += " rating:safe"
     else:
-        return False
+        tags += " -rating:safe"
+    return tags
 # Path: util\util.py

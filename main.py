@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 dotenv.load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-bot = commands.Bot(debug_guilds=[867773426773262346], owner_id=234248229426823168)
+bot = commands.Bot(owner_id=234248229426823168)
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py') and filename.startswith('cog_'):
         try:

@@ -4,18 +4,9 @@ from discord.ext import commands
 import e621 as e6
 from dotenv import load_dotenv
 from discord import option
-
-from util.util import Generate_color, check_nsfw
+from util.util import Generate_color, nsfw_check
 
 load_dotenv()
-
-
-def nsfw_check(tags, ctx):
-    if not ctx.channel.is_nsfw():
-        tags += " rating:safe"
-    else:
-        tags += " -rating:safe"
-    return tags
 
 
 class e621Cmds(commands.Cog):
