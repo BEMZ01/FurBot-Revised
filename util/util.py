@@ -38,4 +38,23 @@ def nsfw_check(tags, ctx):
     else:
         tags += " -rating:safe"
     return tags
+
+
+def check_safe(string: str):
+    # Check if the string contains any of the words from storage/bad-words.txt
+    with open("storage/bad-words.txt", "r") as f:
+        bad_words = f.read().splitlines()
+    for word in bad_words:
+        if word in string:
+            return False
+    return True
+
+
+def process_string(string: str):
+    # Remove any bad words from the string
+    with open("storage/bad-words.txt", "r") as f:
+        bad_words = f.read().splitlines()
+    for word in bad_words:
+        string = string.replace(word, "*" * len(word))
+    return string
 # Path: util\util.py
