@@ -21,10 +21,10 @@ multidict==6.0.4
 numpy==1.24.3
 Pillow==9.5.0
 py-cord==2.4.1
-pydantic==1.10.8
+pydantic==1.10.9
 python-dotenv==1.0.0
 requests==2.31.0
-typing_extensions==4.6.2
 urllib3==2.0.3
+typing_extensions==4.6.3
 Werkzeug==2.3.4
 yarl==1.9.2
