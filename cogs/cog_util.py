@@ -57,6 +57,19 @@ class utilCmds(commands.Cog):
         embed = discord.Embed(title="Links", description="Here are some links to various sites about the bot!")
         await ctx.respond(embed=embed, view=view, ephemeral=True, delete_after=60)
 
+    @commands.slash_command(name="shard", description="Get the shard ID and info for the current guild")
+    async def shard(self, ctx: discord.ApplicationContext):
+        shard: discord.ShardInfo = self.bot.get_shard(ctx.guild.shard_id)
+        shard_count: int = shard.shard_count
+        shard_ping: float = round(shard.latency * 1000, 1)
+        num_servers = len([guild for guild in self.bot.guilds if guild.shard_id == ctx.guild.shard_id])
+        em = discord.Embed(title=f"FurBot Shard Info", description=f"Shard ID: {ctx.guild.shard_id}")
+        em.add_field(name="Shard Count", value=f"{shard_count}")
+        em.add_field(name="Shard Ping", value=f"{shard_ping}ms")
+        em.add_field(name="Servers", value=f"{num_servers}")
+        em.add_field(name="Total Servers", value=f"{len(self.bot.guilds)}")
+        await ctx.respond(embed=em)
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot:
@@ -64,6 +77,7 @@ class utilCmds(commands.Cog):
         if message.content.startswith("an:"):
             await message.channel.send(f"The `an:` prefix is deprecated. Please use the newer discord slash "
                                        f"commands instead. Type `/` to see a list of commands from supported bots.")
+
 
 
 def setup(bot):
