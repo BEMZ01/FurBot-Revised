@@ -24,7 +24,7 @@ py-cord==2.4.1
 pydantic
 python-dotenv==1.0.0
 requests==2.31.0
-Werkzeug==2.3.6
+Werkzeug==2.3.7
 urllib3==2.0.4
 typing_extensions==4.7.1
 yarl==1.9.2
