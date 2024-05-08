@@ -1,7 +1,7 @@
 import random
 import discord
 from discord.ext import commands
-from e621 import E621
+from e621 import E926
 from util.util import Generate_color, nsfw_check
 
 
@@ -17,7 +17,7 @@ async def build_embed(ctx: discord.ApplicationContext, post, title, description)
 class RolePlay_cmds(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.api = E621()
+        self.api = E926(client_name="FurBot")
         self.tag_blacklist = ["-webm", "-child", "animated", "-flash"]
 
     @commands.Cog.listener()
@@ -32,11 +32,7 @@ class RolePlay_cmds(commands.Cog):
     @rp.command(name="hug", description="Hug someone")
     async def hug(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        # if channel is not nsfw, only allow sfw posts
-        if ctx.channel.is_nsfw():
-            posts = self.api.posts.search(tags="hug " + " ".join(self.tag_blacklist), limit=100)
-        else:
-            posts = self.api.posts.search(tags="hug rating:safe " + " ".join(self.tag_blacklist), limit=100)
+        posts = self.api.posts.search(tags="hug " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
         embed = await build_embed(ctx, post, "Hug", f"{ctx.author.mention} hugs {member.mention}")
         view = discord.ui.View()
@@ -47,10 +43,7 @@ class RolePlay_cmds(commands.Cog):
     @rp.command(name="kiss", description="Kiss someone")
     async def kiss(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        if ctx.channel.is_nsfw():
-            posts = self.api.posts.search(tags="kissing " + " ".join(self.tag_blacklist), limit=100)
-        else:
-            posts = self.api.posts.search(tags="kissing rating:safe " + " ".join(self.tag_blacklist), limit=100)
+        posts = self.api.posts.search(tags="kissing " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
         embed = await build_embed(ctx, post, "Kiss", f"{ctx.author.mention} <3 {member.mention}")
         view = discord.ui.View()
@@ -61,10 +54,7 @@ class RolePlay_cmds(commands.Cog):
     @rp.command(name="boop", description="Boop someone")
     async def boop(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        if ctx.channel.is_nsfw():
-            posts = self.api.posts.search(tags="boop " + " ".join(self.tag_blacklist), limit=100)
-        else:
-            posts = self.api.posts.search(tags="boop rating:safe " + " ".join(self.tag_blacklist), limit=100)
+        posts = self.api.posts.search(tags="boop " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
         embed = await build_embed(ctx, post, "Boop", f"{ctx.author.mention} boops {member.mention}")
         view = discord.ui.View()
@@ -75,10 +65,7 @@ class RolePlay_cmds(commands.Cog):
     @rp.command(name="lick", description="Lick someone")
     async def lick(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        if ctx.channel.is_nsfw():
-            posts = self.api.posts.search(tags="licking " + " ".join(self.tag_blacklist), limit=100)
-        else:
-            posts = self.api.posts.search(tags="licking rating:safe " + " ".join(self.tag_blacklist), limit=100)
+        posts = self.api.posts.search(tags="licking " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
         embed = await build_embed(ctx, post, "Lick", f"{ctx.author.mention} licks {member.mention}")
         view = discord.ui.View()
@@ -89,10 +76,7 @@ class RolePlay_cmds(commands.Cog):
     @rp.command(name="pet", description="Pet someone")
     async def pet(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        if ctx.channel.is_nsfw():
-            posts = self.api.posts.search(tags="petting " + " ".join(self.tag_blacklist), limit=100)
-        else:
-            posts = self.api.posts.search(tags="petting rating:safe " + " ".join(self.tag_blacklist), limit=100)
+        posts = self.api.posts.search(tags="petting " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
         embed = await build_embed(ctx, post, "Pet", f"{ctx.author.mention} pets {member.mention}")
         view = discord.ui.View()
@@ -103,10 +87,7 @@ class RolePlay_cmds(commands.Cog):
     @rp.command(name="slap", description="Slap someone")
     async def slap(self, ctx: discord.ApplicationContext, member: discord.Member):
         await ctx.defer()
-        if ctx.channel.is_nsfw():
-            posts = self.api.posts.search(tags="slap " + " ".join(self.tag_blacklist), limit=100)
-        else:
-            posts = self.api.posts.search(tags="slap rating:safe " + " ".join(self.tag_blacklist), limit=100)
+        posts = self.api.posts.search(tags="slap " + " ".join(self.tag_blacklist), limit=100)
         post = random.choice(posts)
         embed = await build_embed(ctx, post, "Slap", f"{ctx.author.mention} slaps {member.mention}")
         view = discord.ui.View()

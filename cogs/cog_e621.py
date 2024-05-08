@@ -16,6 +16,7 @@ class e621Cmds(commands.Cog):
         self.api = e6.E621(client_name="FurBot")
         self.tag_blacklist = ["-webm", "-child", "-flash", "-cub"]
         self.again_button = discord.ui.Button(label="Again", style=discord.ButtonStyle.primary, emoji="🔁")
+        self.close_button = discord.ui.Button(label="Close", style=discord.ButtonStyle.danger, emoji="❌")
 
     e621 = discord.SlashCommandGroup(name="e621", description="Get images from e621")
 
@@ -28,6 +29,14 @@ class e621Cmds(commands.Cog):
     async def cog_command_error(self, ctx: discord.ApplicationContext, error):
         await ctx.respond(error.original, delete_after=10, ephemeral=True)
         raise error
+
+    async def close_callback(self, interaction: discord.Interaction):
+        if interaction.user.id == interaction.message.author.id:
+            await interaction.message.delete()
+            return True
+        else:
+            await interaction.response.send_message("You can't use this button", ephemeral=True)
+            return False
 
     @e621.command(name="top", description="Get the top posts from e621")
     @option(name="tags", description="The tags to search for", required=False)
@@ -110,7 +119,9 @@ class e621Cmds(commands.Cog):
         embed.set_image(url=post.file_obj.url)
         view = discord.ui.View()
         view.add_item(self.again_button)
+        view.add_item(self.close_button)
         self.again_button.callback = r_callback
+        self.close_button.callback = self.close_callback
         await ctx.respond(embed=embed, ephemeral=True, view=view)
 
     @e621.command(name="gif", description="Get a random gif from e621")
@@ -167,7 +178,9 @@ class e621Cmds(commands.Cog):
         embed.set_footer(text=f"Command ran by {str(ctx.author)} | FurBot", icon_url=f"{ctx.author.display_avatar.url}")
         embed.set_image(url=post.file_obj.url)
         view = discord.ui.View()
+        view.add_item(self.close_button)
         view.add_item(self.again_button)
+        self.close_button.callback = self.close_callback
         self.again_button.callback = g_callback
         await ctx.respond(embed=embed, ephemeral=True, view=view, delete_after=240)
 
