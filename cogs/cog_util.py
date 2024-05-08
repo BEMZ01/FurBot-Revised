@@ -8,21 +8,37 @@ class utilCmds(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.display_rotation = 0
+        self.guilds = []
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("UTIL: Started update_display loop")
+        print("UTIL: Cog loaded")
+        print("UTIL: Loading censor list")
+        # read the censor list from file
+        with open("storage/bad-words.txt", "r") as f:
+            # strip any whitespace from the lines
+            bad_words = f.read().strip(" ").splitlines()
+        self.guilds = [guild.name for guild in self.bot.guilds]
+        for i, name in enumerate(self.guilds):
+            for word in bad_words:
+                if word in name:
+                    print(f"UTIL: Found bad word in guild name: {name}")
+                    self.guilds[i] = self.guilds[i].replace(word, "*" * len(word))
+        print("UTIL: Finished loading censor list")
         self.update_display.start()
+        print("UTIL: Started update_display loop")
 
     @tasks.loop(seconds=30)
     async def update_display(self):
+        guild = random.choice(self.guilds)
         await self.bot.wait_until_ready()
         if self.display_rotation == 0:
             await self.bot.change_presence(
-                activity=discord.Activity(type=discord.ActivityType.watching, name=f"{len(self.bot.guilds)} servers."))
+                activity=discord.Activity(type=discord.ActivityType.watching, name=f"over {len(self.bot.guilds)} s"
+                                                                                   f"ervers."))
         elif self.display_rotation == 1:
             await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing,
-                                                                     name=f"with {process_string(random.choice(self.bot.guilds).name)}!"))
+                                                                     name=f"with {guild}!"))
         elif self.display_rotation == 2:
             self.display_rotation = -1
         self.display_rotation += 1

@@ -1,3 +1,4 @@
+import os
 import random
 import discord
 from discord.ext import commands
@@ -12,7 +13,7 @@ load_dotenv()
 class e621Cmds(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.api = e6.E621()
+        self.api = e6.E621(auth=(os.getenv("E621_USER"), os.getenv("E621_API")), client_name="FurBot")
         self.tag_blacklist = ["-webm", "-child", "-flash", "-cub"]
         self.again_button = discord.ui.Button(label="Again", style=discord.ButtonStyle.primary, emoji="🔁")
 

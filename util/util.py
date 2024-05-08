@@ -33,11 +33,17 @@ async def Generate_color(image_url: str):
 
 
 def nsfw_check(tags, ctx):
+    if is_dm(ctx):
+        return tags + " -rating:safe"
     if not ctx.channel.is_nsfw():
         tags += " rating:safe"
     else:
         tags += " -rating:safe"
     return tags
+
+
+def is_dm(ctx):
+    return ctx.channel.type is discord.ChannelType.private
 
 
 def check_safe(string: str):
