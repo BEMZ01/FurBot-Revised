@@ -10,7 +10,7 @@ click==8.1.7
 colorama==0.4.6
 e621-stable==1.0.4
 ffmpeg-python==0.2.0
-frozenlist==1.4.0
+frozenlist==1.4.1
 future==1.0.0
 idna==3.7
 imageio-ffmpeg==0.4.9
