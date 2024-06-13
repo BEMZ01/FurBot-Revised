@@ -13,7 +13,7 @@ ffmpeg-python==0.2.0
 frozenlist==1.4.0
 future==1.0.0
 idna==3.7
-imageio-ffmpeg==0.4.9
+imageio-ffmpeg==0.5.1
 itsdangerous==2.2.0
 Jinja2==3.1.4
 MarkupSafe==2.1.5
