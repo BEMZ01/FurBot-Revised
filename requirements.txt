@@ -23,7 +23,7 @@ Pillow==10.3.0
 py-cord==2.5.0
 pydantic
 python-dotenv==1.0.1
-requests==2.32.2
+requests==2.32.3
 Werkzeug==3.0.3
 urllib3==2.2.1
 typing_extensions==4.12.2
